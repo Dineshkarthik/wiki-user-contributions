@@ -1,4 +1,4 @@
-"""Index page acts as the base template of dashboard."""
+"""Index page of the application."""
 from datetime import date, datetime, timedelta
 
 import dash_core_components as dcc
