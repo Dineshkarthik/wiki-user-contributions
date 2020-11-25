@@ -185,6 +185,9 @@ app.layout = html.Div(
                     page_action="native",
                     page_current=0,
                     page_size=20,
+                    export_columns="all",
+                    export_format="csv",
+                    export_headers="names",
                 )
             ],
             style={"display": "none", "margin": "3%"},
