@@ -1,3 +1,4 @@
 dash==1.17.0
 Flask-Caching==1.9.0
+gunicorn==19.9.0
 requests==2.25.0
