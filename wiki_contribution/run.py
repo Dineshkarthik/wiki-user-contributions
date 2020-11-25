@@ -34,28 +34,20 @@ app.layout = html.Div(
                             className="form-group",
                             children=[
                                 html.Label("Language:"),
-                                dcc.Dropdown(
-                                    id="language-dropdown",
-                                    options=[
-                                        {
-                                            "label": "English",
-                                            "value": "en",
-                                        },
-                                        {
-                                            "label": "Tamil",
-                                            "value": "ta",
-                                        },
-                                        {
-                                            "label": "German",
-                                            "value": "de",
-                                        },
+                                html.Div(
+                                    className="form-group",
+                                    children=[
+                                        dcc.Input(
+                                            id="language",
+                                            type="text",
+                                            placeholder="Ex: en, ta",
+                                            style={
+                                                "width": "51.5%",
+                                                "marginBottom": "3%",
+                                            },
+                                            required="REQUIRED",
+                                        )
                                     ],
-                                    value="ta",
-                                    clearable=False,
-                                    style={
-                                        "width": "51.5%",
-                                        "marginBottom": "3%",
-                                    },
                                 ),
                             ],
                         ),
@@ -63,28 +55,20 @@ app.layout = html.Div(
                             className="form-group",
                             children=[
                                 html.Label("Wikisite:"),
-                                dcc.Dropdown(
-                                    id="wikisite-dropdown",
-                                    options=[
-                                        {
-                                            "label": "All",
-                                            "value": "all",
-                                        },
-                                        {
-                                            "label": "wikisource",
-                                            "value": "wikisource",
-                                        },
-                                        {
-                                            "label": "wikimedia",
-                                            "value": "wikimedia",
-                                        },
+                                html.Div(
+                                    className="form-group",
+                                    children=[
+                                        dcc.Input(
+                                            id="wikisite",
+                                            type="text",
+                                            placeholder="Ex: wikisource",
+                                            style={
+                                                "width": "51.5%",
+                                                "marginBottom": "3%",
+                                            },
+                                            required="REQUIRED",
+                                        )
                                     ],
-                                    value="wikisource",
-                                    clearable=False,
-                                    style={
-                                        "width": "51.5%",
-                                        "marginBottom": "3%",
-                                    },
                                 ),
                             ],
                         ),
@@ -142,7 +126,6 @@ app.layout = html.Div(
                     "Generate Report",
                     id="generate-report",
                     className="submit-button",
-                    # className="button-primary",
                     type="submit",
                     value="form",
                     style={
@@ -254,19 +237,19 @@ def get_usercontrib_details(
         State("date-picker-range", "start_date"),
         State("date-picker-range", "end_date"),
         State("username", "value"),
-        State("language-dropdown", "value"),
-        State("wikisite-dropdown", "value"),
+        State("language", "value"),
+        State("wikisite", "value"),
     ],
 )
 def generate_report(
-    generate_qry,
+    gen_report,
     start_date,
     end_date,
     username,
     language,
     wikisite,
 ):
-    if generate_qry:
+    if gen_report:
         results = get_usercontrib_details(
             language, wikisite, username, start_date, end_date
         )
