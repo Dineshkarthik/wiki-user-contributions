@@ -2,13 +2,14 @@
 import os
 import hashlib
 
+import dash_bootstrap_components as dbc
 from dash import Dash
 from flask import Flask, redirect, escape, request
 from flask_caching import Cache
 
 
 external_stylesheets = [
-    "//stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css",
+    dbc.themes.BOOTSTRAP,
     "//fonts.googleapis.com/css?family=Product+Sans:400,400i,700,700i",
     "/static/css/base.css",
 ]

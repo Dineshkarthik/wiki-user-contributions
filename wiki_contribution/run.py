@@ -1,6 +1,7 @@
 """Index page of the application."""
 from datetime import date, datetime, timedelta
 
+import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table as dt
@@ -9,35 +10,51 @@ from dash.dependencies import Input, Output, State
 
 from .server import app, server, cache
 
+LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Wikimedia-logo_black.svg/45px-Wikimedia-logo_black.svg.png"
+S = requests.Session()
 
 app.layout = html.Div(
     children=[
-        html.Nav(
-            className="navbar navbar-expand-lg py-md-3 navbar-light bg-light",
-            children=[
-                html.Div(
+        dbc.Navbar(
+            [
+                dbc.Row(
                     [
-                        html.Strong(
-                            "Wiki User Contribution", className="navbar-header"
-                        )
-                    ]
+                        dbc.Col(
+                            [
+                                html.Img(src=LOGO, height="30px"),
+                                dbc.NavbarBrand(
+                                    "Wiki User Contributions", className="ml-2"
+                                ),
+                            ]
+                        ),
+                    ],
+                    align="left",
+                    no_gutters=True,
                 ),
             ],
+            color="#119dff",
+            dark=True,
         ),
         html.Div(
             className="bordered-inner-div",
             children=[
+                dbc.Alert(
+                    "Please fill out all the required fields (*)",
+                    id="missing-params-alert",
+                    dismissable=True,
+                    is_open=False,
+                ),
                 html.Div(
                     className="form-group",
                     children=[
                         html.Div(
                             className="form-group",
                             children=[
-                                html.Label("Language:"),
+                                dbc.Label("Language*:"),
                                 html.Div(
                                     className="form-group",
                                     children=[
-                                        dcc.Input(
+                                        dbc.Input(
                                             id="language",
                                             type="text",
                                             placeholder="Ex: en, ta",
@@ -45,7 +62,6 @@ app.layout = html.Div(
                                                 "width": "51.5%",
                                                 "marginBottom": "3%",
                                             },
-                                            required="REQUIRED",
                                         )
                                     ],
                                 ),
@@ -54,11 +70,11 @@ app.layout = html.Div(
                         html.Div(
                             className="form-group",
                             children=[
-                                html.Label("Wikisite:"),
+                                dbc.Label("Wikisite*:"),
                                 html.Div(
                                     className="form-group",
                                     children=[
-                                        dcc.Input(
+                                        dbc.Input(
                                             id="wikisite",
                                             type="text",
                                             placeholder="Ex: wikisource",
@@ -66,7 +82,6 @@ app.layout = html.Div(
                                                 "width": "51.5%",
                                                 "marginBottom": "3%",
                                             },
-                                            required="REQUIRED",
                                         )
                                     ],
                                 ),
@@ -75,11 +90,11 @@ app.layout = html.Div(
                         html.Div(
                             className="form-group",
                             children=[
-                                html.Label("Username:"),
+                                dbc.Label("Username*:"),
                                 html.Div(
                                     className="form-group",
                                     children=[
-                                        dcc.Input(
+                                        dbc.Input(
                                             id="username",
                                             type="text",
                                             placeholder="your wikimedia username",
@@ -87,7 +102,6 @@ app.layout = html.Div(
                                                 "width": "51.5%",
                                                 "marginBottom": "3%",
                                             },
-                                            required="REQUIRED",
                                         )
                                     ],
                                 ),
@@ -129,9 +143,23 @@ app.layout = html.Div(
                     type="submit",
                     value="form",
                     style={
-                        "marginTop": "5%",
-                        "marginBottom": "5%",
+                        "marginTop": "10%",
+                        "marginBottom": "2%",
                     },
+                ),
+                dbc.Alert(
+                    [
+                        html.H4("No Data!", className="alert-heading"),
+                        html.Hr(),
+                        html.P(
+                            "There is no user contribution data available for the given time-period.",
+                            className="mb-0",
+                        ),
+                    ],
+                    id="no-data-alert",
+                    dismissable=True,
+                    is_open=False,
+                    color="info",
                 ),
             ],
             style={
@@ -139,7 +167,6 @@ app.layout = html.Div(
                 "overflow": "hidden",
             },
         ),
-        html.Div(id="out-all-types"),
         html.Div(
             id="report-table-div",
             children=[
@@ -179,14 +206,11 @@ app.layout = html.Div(
 )
 
 
-S = requests.Session()
-
-
-@cache.memoize(timeout=1200)
+@cache.memoize(timeout=120)
 def get_usercontrib_details(
     language, wikisite, username, start_date, end_date
 ):
-    URL = "https://" + language + "." + wikisite + ".org/w/api.php"
+    URL = f"https://{language}.{wikisite}.org/w/api.php"
 
     PARAMS = {
         "uclimit": 500,
@@ -225,12 +249,14 @@ def get_usercontrib_details(
     return csv_content
 
 
-@cache.memoize(timeout=1200)
+@cache.memoize(timeout=120)
 @app.callback(
     [
         Output("report-table", "data"),
         Output("report-table", "columns"),
         Output("report-table-div", "style"),
+        Output("missing-params-alert", "is_open"),
+        Output("no-data-alert", "is_open"),
     ],
     [Input("generate-report", "n_clicks")],
     [
@@ -249,19 +275,48 @@ def generate_report(
     language,
     wikisite,
 ):
+    results: list = []
+    columns: list = []
+    style: dict = {"display": "none"}
+    alert: bool = False
+    no_data_alert: bool = False
     if gen_report:
-        results = get_usercontrib_details(
-            language, wikisite, username, start_date, end_date
-        )
-        columns = []
-        if results:
-            columns = [{"name": i, "id": i} for i in results[0].keys()]
-        return [
-            results,
-            columns,
-            {"display": "block", "margin": "3%"},
-        ]
-    return [[], [], {"display": "none"}]
+        if all([language, wikisite, username, start_date, end_date]):
+            results = get_usercontrib_details(
+                language, wikisite, username, start_date, end_date
+            )
+            if results:
+                columns = [{"name": i, "id": i} for i in results[0].keys()]
+                style = {"display": "block", "margin": "3%"}
+            else:
+                no_data_alert = True
+        else:
+            alert = True
+    return [results, columns, style, alert, no_data_alert]
+
+
+@app.callback(
+    [
+        Output("username", "invalid"),
+        Output("language", "invalid"),
+        Output("wikisite", "invalid"),
+    ],
+    [Input("generate-report", "n_clicks")],
+    [
+        State("username", "value"),
+        State("language", "value"),
+        State("wikisite", "value"),
+    ],
+)
+def validate_inputs(
+    gen_report,
+    username,
+    language,
+    wikisite,
+):
+    if gen_report:
+        return [not bool(username), not bool(language), not bool(wikisite)]
+    return [False, False, False]
 
 
 if __name__ == "__main__":
