@@ -12,7 +12,7 @@ $ pip install -r requirements.txt
 ## Execution
 
 ```sh
-$ python index.py
+$ python app.py
 ```
 
-> For production deployment use any wsgi server. Ex: `gunicorn index:app.server`.
+> For production deployment use any wsgi server. Ex: `gunicorn app:app.server`.
