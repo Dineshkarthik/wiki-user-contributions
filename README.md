@@ -1,5 +1,5 @@
 # wiki-user-contributions
-Generate user's Wikipedia Contribution
+Generate a table of the user's contributions on Wikimedia's projects.
 
 Inspired from - https://github.com/tshrinivasan/wiki_user_contributions_report
 
