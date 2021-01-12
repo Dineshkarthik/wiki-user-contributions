@@ -123,7 +123,7 @@ app.layout = html.Div(
                                         dbc.Input(
                                             id="username",
                                             type="text",
-                                            placeholder="your wikimedia username",
+                                            placeholder="Your username on Wikimedia's projects",
                                             style={
                                                 "width": "51.5%",
                                                 "marginBottom": "3%",
