@@ -13,6 +13,15 @@ from .server import app, server, cache
 LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Wikimedia-logo_black.svg/45px-Wikimedia-logo_black.svg.png"
 S = requests.Session()
 
+
+def get_start_date():
+    return date.today() - timedelta(days=7)
+
+
+def get_end_date():
+    return date.today()
+
+
 app.layout = html.Div(
     children=[
         dbc.Navbar(
@@ -124,11 +133,10 @@ app.layout = html.Div(
                                 dcc.DatePickerRange(
                                     id="date-picker-range",
                                     min_date_allowed=date(2001, 1, 15),
-                                    max_date_allowed=date.today(),
+                                    max_date_allowed=get_end_date(),
                                     display_format="YYYY-MM-DD",
-                                    start_date=date.today()
-                                    - timedelta(days=7),
-                                    end_date=date.today(),
+                                    start_date=get_start_date(),
+                                    end_date=get_end_date(),
                                 )
                             ],
                             style={"width": "100%"},
