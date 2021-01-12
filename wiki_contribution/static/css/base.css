@@ -80,6 +80,10 @@ label {
     display: inline-block;
 }
 
+.navbar-brand {
+    vertical-align: middle;
+}
+
 .fa-fw {
     margin-left: -10px;
 }
