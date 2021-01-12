@@ -22,6 +22,19 @@ def get_end_date():
     return date.today()
 
 
+source_code_link = dbc.Row(
+    [
+        dbc.Col(
+            html.A(
+                html.I(className="fab fa-github-square fa-3x"),
+                href="https://github.com/Dineshkarthik/wiki-user-contributions",
+            )
+        ),
+    ],
+    no_gutters=True,
+    className="ml-auto flex-nowrap mt-3 mt-md-0",
+    align="center",
+)
 app.layout = html.Div(
     children=[
         dbc.Navbar(
@@ -39,6 +52,10 @@ app.layout = html.Div(
                     ],
                     align="left",
                     no_gutters=True,
+                ),
+                dbc.NavbarToggler(id="navbar-toggler"),
+                dbc.Collapse(
+                    source_code_link, id="navbar-collapse", navbar=True
                 ),
             ],
             color="#119dff",
