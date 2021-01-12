@@ -1,6 +1,8 @@
 # wiki-user-contributions
 Generate a table of the user's contributions on Wikimedia's projects.
 
+The generated table can be exported as a CSV file as well.
+
 Inspired from - https://github.com/tshrinivasan/wiki_user_contributions_report
 
 ## Installation
