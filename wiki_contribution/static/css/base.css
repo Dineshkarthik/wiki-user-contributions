@@ -251,7 +251,7 @@ textarea{
     border-radius: 4px;
 }
 
-.submit-button {
+.submit-button, .export {
     display: inline-block;
     height: 38px;
     padding: 0 30px;
@@ -275,7 +275,7 @@ textarea{
     border-color: #33C3F0;
 }
 
-.submit-button:focus {
+.submit-button:focus, .export:focus {
     color: #333;
     border-color: #888;
     outline: 0;
@@ -284,7 +284,7 @@ textarea{
     border-color: #1EAEDB;
 }
 
-a.submit-button{
+a.submit-button, a.export{
     margin-top: 10px;
 }
 
@@ -333,4 +333,8 @@ a.submit-button{
     border: 1px solid rgb(214, 214, 214);
     margin-top: 1%;
     margin-left: 1%;
+}
+
+.export{
+    margin-bottom: 3%;
 }
