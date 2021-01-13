@@ -7,5 +7,5 @@ setup(
     ],
     include_package_data=True,
     install_requires=[],
-    version="0.1.0",
+    version="0.2.1",
 )
