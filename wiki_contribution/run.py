@@ -35,200 +35,208 @@ source_code_link = dbc.Row(
     className="ml-auto flex-nowrap mt-3 mt-md-0",
     align="center",
 )
-app.layout = html.Div(
-    children=[
-        dbc.Navbar(
-            [
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            [
-                                html.Img(src=LOGO, height="30px"),
-                                dbc.NavbarBrand(
-                                    "Wiki User Contributions", className="ml-2"
-                                ),
-                            ]
-                        ),
-                    ],
-                    align="left",
-                    no_gutters=True,
-                ),
-                dbc.NavbarToggler(id="navbar-toggler"),
-                dbc.Collapse(
-                    source_code_link, id="navbar-collapse", navbar=True
-                ),
-            ],
-            color="#119dff",
-            dark=True,
-        ),
-        html.Div(
-            className="bordered-inner-div",
-            children=[
-                dbc.Alert(
-                    "Please fill out all the required fields (*)",
-                    id="missing-params-alert",
-                    dismissable=True,
-                    is_open=False,
-                ),
-                html.Div(
-                    className="form-group",
-                    children=[
-                        html.Div(
-                            className="form-group",
-                            children=[
-                                dbc.Label("Language*:"),
-                                html.Div(
-                                    className="form-group",
-                                    children=[
-                                        dbc.Input(
-                                            id="language",
-                                            type="text",
-                                            placeholder="Ex: en, ta",
-                                            style={
-                                                "width": "51.5%",
-                                                "marginBottom": "3%",
-                                            },
-                                        )
-                                    ],
-                                ),
-                            ],
-                        ),
-                        html.Div(
-                            className="form-group",
-                            children=[
-                                dbc.Label("Wikisite*:"),
-                                html.Div(
-                                    className="form-group",
-                                    children=[
-                                        dbc.Input(
-                                            id="wikisite",
-                                            type="text",
-                                            placeholder="Ex: wikisource",
-                                            style={
-                                                "width": "51.5%",
-                                                "marginBottom": "3%",
-                                            },
-                                        )
-                                    ],
-                                ),
-                            ],
-                        ),
-                        html.Div(
-                            className="form-group",
-                            children=[
-                                dbc.Label("Username*:"),
-                                html.Div(
-                                    className="form-group",
-                                    children=[
-                                        dbc.Input(
-                                            id="username",
-                                            type="text",
-                                            placeholder="Your username on Wikimedia's projects",
-                                            style={
-                                                "width": "51.5%",
-                                                "marginBottom": "3%",
-                                            },
-                                        )
-                                    ],
-                                ),
-                            ],
-                        ),
-                    ],
-                    style={
-                        "float": "left",
-                        "width": "40%",
-                        "marginBottom": "3%",
-                    },
-                ),
-                html.Div(
-                    className="form-group",
-                    id="date-range-div",
-                    children=[
-                        html.Div([html.Label("Date range: YYYY-MM-DD")]),
-                        html.Div(
-                            [
-                                dcc.DatePickerRange(
-                                    id="date-picker-range",
-                                    min_date_allowed=date(2001, 1, 15),
-                                    max_date_allowed=get_end_date(),
-                                    display_format="YYYY-MM-DD",
-                                    start_date=get_start_date(),
-                                    end_date=get_end_date(),
-                                )
-                            ],
-                            style={"width": "100%"},
-                        ),
-                    ],
-                    style={"padding": "1%"},
-                ),
-                html.Button(
-                    "Generate Report",
-                    id="generate-report",
-                    className="submit-button",
-                    type="submit",
-                    value="form",
-                    style={
-                        "marginTop": "10%",
-                        "marginBottom": "2%",
-                    },
-                ),
-                dbc.Alert(
-                    [
-                        html.H4("No Data!", className="alert-heading"),
-                        html.Hr(),
-                        html.P(
-                            "There is no user contribution data available for the given time-period.",
-                            className="mb-0",
-                        ),
-                    ],
-                    id="no-data-alert",
-                    dismissable=True,
-                    is_open=False,
-                    color="info",
-                ),
-            ],
-            style={
-                "padding": "1%",
-                "overflow": "hidden",
-            },
-        ),
-        html.Div(
-            id="report-table-div",
-            children=[
-                dt.DataTable(
-                    id="report-table",
-                    data=[{}],
-                    columns=[],
-                    style_cell={
-                        "textAlign": "center",
-                        "fontSize": "14px",
-                        "padding": "5px",
-                    },
-                    style_data_conditional=[
-                        {
-                            "if": {"row_index": "odd"},
-                            "backgroundColor": "rgb(248, 248, 248)",
-                        }
-                    ],
-                    style_header={
-                        "backgroundColor": "rgb(230, 230, 230)",
-                        "fontWeight": "bold",
-                        "textAlign": "center",
-                    },
-                    sort_action="native",
-                    sort_mode="multi",
-                    page_action="native",
-                    page_current=0,
-                    page_size=20,
-                    export_columns="all",
-                    export_format="csv",
-                    export_headers="names",
-                )
-            ],
-            style={"display": "none", "margin": "3%"},
-        ),
-    ]
-)
+
+
+def get_layout():
+    return html.Div(
+        children=[
+            dbc.Navbar(
+                [
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                [
+                                    html.Img(src=LOGO, height="30px"),
+                                    dbc.NavbarBrand(
+                                        "Wiki User Contributions",
+                                        className="ml-2",
+                                    ),
+                                ]
+                            ),
+                        ],
+                        align="left",
+                        no_gutters=True,
+                    ),
+                    dbc.NavbarToggler(id="navbar-toggler"),
+                    dbc.Collapse(
+                        source_code_link, id="navbar-collapse", navbar=True
+                    ),
+                ],
+                color="#119dff",
+                dark=True,
+            ),
+            html.Div(
+                className="bordered-inner-div",
+                children=[
+                    dbc.Alert(
+                        "Please fill out all the required fields (*)",
+                        id="missing-params-alert",
+                        dismissable=True,
+                        is_open=False,
+                    ),
+                    html.Div(
+                        className="form-group",
+                        children=[
+                            html.Div(
+                                className="form-group",
+                                children=[
+                                    dbc.Label("Language*:"),
+                                    html.Div(
+                                        className="form-group",
+                                        children=[
+                                            dbc.Input(
+                                                id="language",
+                                                type="text",
+                                                placeholder="Ex: en, ta",
+                                                style={
+                                                    "width": "51.5%",
+                                                    "marginBottom": "3%",
+                                                },
+                                            )
+                                        ],
+                                    ),
+                                ],
+                            ),
+                            html.Div(
+                                className="form-group",
+                                children=[
+                                    dbc.Label("Wikisite*:"),
+                                    html.Div(
+                                        className="form-group",
+                                        children=[
+                                            dbc.Input(
+                                                id="wikisite",
+                                                type="text",
+                                                placeholder="Ex: wikisource",
+                                                style={
+                                                    "width": "51.5%",
+                                                    "marginBottom": "3%",
+                                                },
+                                            )
+                                        ],
+                                    ),
+                                ],
+                            ),
+                            html.Div(
+                                className="form-group",
+                                children=[
+                                    dbc.Label("Username*:"),
+                                    html.Div(
+                                        className="form-group",
+                                        children=[
+                                            dbc.Input(
+                                                id="username",
+                                                type="text",
+                                                placeholder="Your username on Wikimedia's projects",
+                                                style={
+                                                    "width": "51.5%",
+                                                    "marginBottom": "3%",
+                                                },
+                                            )
+                                        ],
+                                    ),
+                                ],
+                            ),
+                        ],
+                        style={
+                            "float": "left",
+                            "width": "40%",
+                            "marginBottom": "3%",
+                        },
+                    ),
+                    html.Div(
+                        className="form-group",
+                        id="date-range-div",
+                        children=[
+                            html.Div([html.Label("Date range: YYYY-MM-DD")]),
+                            html.Div(
+                                [
+                                    dcc.DatePickerRange(
+                                        id="date-picker-range",
+                                        min_date_allowed=date(2001, 1, 15),
+                                        max_date_allowed=get_end_date()
+                                        + timedelta(days=1),
+                                        display_format="YYYY-MM-DD",
+                                        start_date=get_start_date(),
+                                        end_date=get_end_date(),
+                                    )
+                                ],
+                                style={"width": "100%"},
+                            ),
+                        ],
+                        style={"padding": "1%"},
+                    ),
+                    html.Button(
+                        "Generate Report",
+                        id="generate-report",
+                        className="submit-button",
+                        type="submit",
+                        value="form",
+                        style={
+                            "marginTop": "10%",
+                            "marginBottom": "2%",
+                        },
+                    ),
+                    dbc.Alert(
+                        [
+                            html.H4("No Data!", className="alert-heading"),
+                            html.Hr(),
+                            html.P(
+                                "There is no user contribution data available for the given time-period.",
+                                className="mb-0",
+                            ),
+                        ],
+                        id="no-data-alert",
+                        dismissable=True,
+                        is_open=False,
+                        color="info",
+                    ),
+                ],
+                style={
+                    "padding": "1%",
+                    "overflow": "hidden",
+                },
+            ),
+            html.Div(
+                id="report-table-div",
+                children=[
+                    dt.DataTable(
+                        id="report-table",
+                        data=[{}],
+                        columns=[],
+                        style_cell={
+                            "textAlign": "center",
+                            "fontSize": "14px",
+                            "padding": "5px",
+                        },
+                        style_data_conditional=[
+                            {
+                                "if": {"row_index": "odd"},
+                                "backgroundColor": "rgb(248, 248, 248)",
+                            }
+                        ],
+                        style_header={
+                            "backgroundColor": "rgb(230, 230, 230)",
+                            "fontWeight": "bold",
+                            "textAlign": "center",
+                        },
+                        sort_action="native",
+                        sort_mode="multi",
+                        page_action="native",
+                        page_current=0,
+                        page_size=20,
+                        export_columns="all",
+                        export_format="csv",
+                        export_headers="names",
+                    )
+                ],
+                style={"display": "none", "margin": "3%"},
+            ),
+        ]
+    )
+
+
+app.layout = get_layout
 
 
 @cache.memoize(timeout=120)
